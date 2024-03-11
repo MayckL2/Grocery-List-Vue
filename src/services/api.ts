@@ -1,14 +1,18 @@
 
 
-const url = 'http://localhost:3000/'
+const url = 'https://good-swamp-coil.glitch.me/'
 
 export async function getAll(){
-    let response = await fetch(url + 'shoplist')
-    let data = await response.json()
-
-    if(response.status == 200){
-        return data
-    }else{
+    try {
+        let response = await fetch(url + 'shoplist')
+        let data = await response.json()
+        
+        if(response.status == 200){
+            return data
+        }else{
+            return 'error'
+        }
+    } catch (error) {
         return 'error'
     }
 }

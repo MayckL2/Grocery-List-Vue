@@ -16,7 +16,6 @@ export default {
     return {
       counter: useCounterStore(),
       list: <Array<{ id: number, item: string, marked: boolean, preco: number }>>[],
-      msgAlert: '',
       statusAlert: <"error" | "success" | "warning" | "info" | undefined>'info',
       soma: 0
     }
@@ -26,13 +25,16 @@ export default {
     console.log(response)
     if (response == 'error') {
       this.counter.setMsg('Something wrong...')
-      this.msgAlert = this.counter.msg
       this.statusAlert = 'error'
     } else {
+      if (this.list.length == 0) {
+        this.statusAlert = 'info'
+        this.counter.setMsg('Is nothing on the list...')
+      }else{
+        this.statusAlert = 'success'
+        this.counter.setMsg('There is you list!')
+      }
       this.list = response
-      this.counter.setMsg('There is you list!')
-      this.msgAlert = this.counter.msg
-      this.statusAlert = 'success'
     }
     this.somaTotal()
   },
@@ -46,7 +48,9 @@ export default {
     async clear() {
       let response = await clearAll()
       this.counter.setMsg(response)
-      this.updateList()
+      setTimeout(() => {
+        this.updateList()
+      }, 500)
     },
     somaTotal() {
       this.soma = 0
@@ -61,7 +65,8 @@ export default {
 <template>
   <div class="flex flex-col gap-4 text-palette mx-[0%] sm:mx-[17%] md:mx-[23%]">
     <total :total="soma" />
-    <div class="flex justify-between items-end gap-2 flex-wrap">
+    <div
+      class="flex justify-between items-start sm:items-end gap-2 py-2 flex-col sm:flex-row sticky top-0 z-10 bg-palette">
       <h1 class="text-5xl">Grocery List</h1>
       <addItem @update="updateList" />
     </div>
@@ -71,6 +76,10 @@ export default {
     <ul class="flex flex-col gap-2">
       <item v-for="item in list" :key="item.id" :id="String(item.id)" :name="item.item" :price="item.preco"
         :marked="item.marked" @update="updateList"></item>
+      <div v-if="list.length == 0" class="flex flex-col self-center relative">
+        <img class="w-80" src="/empity.png" alt="empity list">
+        <p class="absolute bottom-6 text-xl font-bold capitalize">write something on yout list!</p>
+      </div>
     </ul>
 
     <v-dialog class="max-w-[30rem]">

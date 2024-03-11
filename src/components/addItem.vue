@@ -1,7 +1,7 @@
 <template>
   <v-dialog class="max-w-[30rem]">
     <template v-slot:activator="{ props: activatorProps }">
-      <v-btn v-bind="activatorProps" color="purple" class="rounded-lg w-fit" text="Add Item" variant="flat"></v-btn>
+      <v-btn v-bind="activatorProps" color="purple" class="rounded-lg w-full sm:w-fit" text="Add Item" variant="flat"></v-btn>
     </template>
 
     <template v-slot:default="{ isActive }">
